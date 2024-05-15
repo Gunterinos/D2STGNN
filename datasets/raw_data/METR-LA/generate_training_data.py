@@ -78,7 +78,9 @@ def generate_train_val_test(args):
     # 0 is the latest observed sample.
     x_offsets = np.sort(np.concatenate((np.arange(-(seq_length_x - 1), 1, 1),)))
     # Predict the next one hour
-    y_offsets = np.sort(np.arange(args.y_start, (seq_length_y + 1), 1))
+    y_offsets = np.sort([13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
+    # y_offsets = np.sort(np.arange(args.y_start, (seq_length_y + 1), 1))
+    print(y_offsets)
     # x: (num_samples, input_length, num_nodes, input_dim)
     # y: (num_samples, output_length, num_nodes, output_dim)
     x, y = generate_graph_seq2seq_io_data(
@@ -101,6 +103,8 @@ def generate_train_val_test(args):
         y[num_train: num_train + num_val],
     )
     x_test, y_test = x[-num_test:], y[-num_test:]
+
+    print(y_offsets.reshape(list(y_offsets.shape) + [1]))
 
     for cat in ["train", "val", "test"]:
         _x, _y = locals()["x_" + cat], locals()["y_" + cat]

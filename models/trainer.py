@@ -2,6 +2,7 @@
 import numpy as np
 import torch
 import torch.optim as optim
+from matplotlib import pyplot as plt
 from torchinfo.torchinfo import summary
 from sklearn.metrics import mean_absolute_error
 
@@ -206,10 +207,17 @@ class trainer():
         amape   = []
         armse   = []
 
+        predicted_values = []
+        real_values = []
+
         for i in range(12):
             # For horizon i, only calculate the metrics **at that time** slice here.
             pred    = yhat[:,:,i]
             real    = realy[:,:,i]
+
+            predicted_values.append(pred.cpu().numpy())
+            real_values.append(real.cpu().numpy())
+
             if kwargs['dataset_name'] == 'PEMS04' or kwargs['dataset_name'] == 'PEMS08':  # traffic flow dataset follows mae metric used in ASTGNN.
                 mae     = mean_absolute_error(pred.cpu().numpy(), real.cpu().numpy())
                 rmse    = masked_rmse(pred, real, 0.0).item()
@@ -226,6 +234,27 @@ class trainer():
                 amae.append(metrics[0])     # mae
                 amape.append(metrics[1])    # mape
                 armse.append(metrics[2])    # rmse
+
+        for i, (pred, real) in enumerate(zip(predicted_values, real_values)):
+            # Get the length of the pred array to determine the corresponding real values
+
+            pred_subset = []
+            real_subset = []
+            for j, (p, r) in enumerate(zip(pred, real)):
+                if j > 1000:
+                    break
+                pred_subset.append(p[0])
+                real_subset.append(r[0])
+
+            plt.figure(figsize=(10, 6))
+            plt.plot(real_subset, label='Real')
+            plt.plot(pred_subset, label='Predicted')
+            plt.xlabel('Time Step - Sensor 0')
+            plt.ylabel('Value')
+            plt.title(f'Predicted vs. Real Values (Horizon {i + 1})')
+            plt.legend()
+            plt.savefig(f'plots/plot_horizon_{i + 1}_{kwargs["dataset_name"]}.png')  # Save the plot
+            plt.close()  # Close the plot to free up memory
 
         log = '(On average over 12 horizons) Test MAE: {:.2f} | Test RMSE: {:.2f} | Test MAPE: {:.2f}% |'
         print(log.format(np.mean(amae),np.mean(armse),np.mean(amape) * 100))
