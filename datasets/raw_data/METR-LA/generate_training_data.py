@@ -76,10 +76,16 @@ def generate_train_val_test(args):
     seq_length_x, seq_length_y = args.seq_length_x, args.seq_length_y
     df = pd.read_hdf(args.traffic_df_filename)
     # 0 is the latest observed sample.
-    x_offsets = np.sort(np.concatenate((np.arange(-(seq_length_x - 1), 1, 1),)))
+    # the horizon you want to predict
+    hours = 2
+    # x_offsets = np.sort(np.concatenate((np.arange(-(seq_length_x - 1), 1, 1),)))
+    x_offsets = np.sort([-11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0])
+    x_offsets = x_offsets - (12 * (hours-1))
     # Predict the next one hour
-    y_offsets = np.sort([13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24])
+    y_offsets = np.sort([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+    y_offsets = y_offsets + (12 * (hours-1))
     # y_offsets = np.sort(np.arange(args.y_start, (seq_length_y + 1), 1))
+    print(x_offsets)
     print(y_offsets)
     # x: (num_samples, input_length, num_nodes, input_dim)
     # y: (num_samples, output_length, num_nodes, output_dim)

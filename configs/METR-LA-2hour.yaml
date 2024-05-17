@@ -2,7 +2,7 @@
 # start up
 start_up:
   # =================== running mode (select one of the three) ================== #
-  mode: test # three mode: test, resume, scratch
+  mode: scratch # three mode: test, resume, scratch
   resume_epoch: 0   # default to zero, if use the 'resume' mode, users need to set the epoch to resume.
 
   # ============================================================================= #
@@ -13,7 +13,7 @@ start_up:
 
 # Data Processing
 data_args:
-  data_dir:       datasets/METR-LA                        # data path
+  data_dir:       datasets/METR-LA- 2hour                        # data path
   adj_data_path:  datasets/sensor_graph/adj_mx_la.pkl     # adj data path
   adj_type:       doubletransition                        # adj type to preprocessing
 
