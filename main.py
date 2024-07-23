@@ -162,12 +162,12 @@ def main(**kwargs):
                 print('Early stopping!')
                 break
 # =============================================================== Test ================================================================= #
-            engine.test(model, save_path_resume, device, dataloader, scaler, model_name, _max=_max, _min=_min, loss=engine.loss, dataset_name=dataset_name)
+            engine.test(epoch, model, save_path_resume, device, dataloader, scaler, model_name, _max=_max, _min=_min, loss=engine.loss, dataset_name=dataset_name)
 
         print("Average Training Time: {:.4f} secs/epoch".format(np.mean(train_time)))
         print("Average Inference Time: {:.4f} secs/epoch".format(np.mean(val_time)))
     else:
-        engine.test(model, save_path_resume, device, dataloader, scaler, model_name, save=False, _max=_max, _min=_min, loss=engine.loss, dataset_name=dataset_name)
+        engine.test("test", model, save_path_resume, device, dataloader, scaler, model_name, save=False, _max=_max, _min=_min, loss=engine.loss, dataset_name=dataset_name)
 
 if __name__ == '__main__':
     t_start = time.time()

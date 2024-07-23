@@ -79,12 +79,8 @@ def generate_train_val_test(args):
     # the horizon you want to predict
     hours = 3
     x_offsets = np.sort(np.concatenate((np.arange(-(seq_length_x - 1), 1, 1),)))
-    # x_offsets = np.sort([-11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0])
-    # x_offsets = x_offsets - (12 * (hours-1))
     # Predict the next one hour
-    y_offsets = np.sort([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-    y_offsets = y_offsets + (12 * (hours-1))
-    # y_offsets = np.sort(np.arange(args.y_start, (seq_length_y + 1), 1))
+    y_offsets = np.sort(np.arange(args.y_start, (seq_length_y + 1), 1))
     print(x_offsets)
     print(y_offsets)
     # x: (num_samples, input_length, num_nodes, input_dim)
@@ -125,12 +121,12 @@ def generate_train_val_test(args):
 
 
 if __name__ == "__main__":
-    seq_length_x    = 12
-    seq_length_y    = 12
+    seq_length_x    = 120
+    seq_length_y    = 120
     y_start         = 1
     dow             = True # 是否添加day of week(按比例算)特征
     dataset         = "METR-LA"
-    output_dir  = 'datasets/METR-LA'
+    output_dir  = 'datasets/METR-LA-10hours'
     traffic_df_filename = 'datasets/raw_data/METR-LA/metr-la.h5'
     
     parser  = argparse.ArgumentParser()

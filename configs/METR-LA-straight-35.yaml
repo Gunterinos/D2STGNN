@@ -2,7 +2,7 @@
 # start up
 start_up:
   # =================== running mode (select one of the three) ================== #
-  mode: scratch    # three mode: test, resume, scratch
+  mode: scratch     # three mode: test, resume, scratch
   resume_epoch: 0   # default to zero, if use the 'resume' mode, users need to set the epoch to resume.
 
   # ============================================================================= #
@@ -13,8 +13,8 @@ start_up:
 
 # Data Processing
 data_args:
-  data_dir:       datasets/METR-LA-3hour                        # data path
-  adj_data_path:  datasets/sensor_graph/adj_mx_la.pkl     # adj data path
+  data_dir:       datasets/METR-LA-one-intersection-20                       # data path
+  adj_data_path:  datasets/sensor_graph/metrl-la-one-intersection-20.pkl     # adj data path
   adj_type:       doubletransition                        # adj type to preprocessing
 
 # Model Args
@@ -25,7 +25,7 @@ model_args:
   node_hidden:  10
   time_emb_dim: 10
   dropout:      0.1
-  seq_length:   12
+  seq_length:   120
   k_t:          3
   k_s:          2
   gap:          3
@@ -45,10 +45,10 @@ optim_args:
   # curriculum learning
   if_cl:          True                                    # if use curriculum learning
   cl_epochs:      6                                       # epochs of curriculum learning when to forecasting next time step
-  output_seq_len: 12
+  output_seq_len: 120
   # warm up
   warm_epochs:    0                                       # epochs of warmming up
   # procedure
   epochs:         80                                      # total epoch numbers
-  patience:       100                                     # patience for earlystopping
-  seq_length:     12                                      # input & output seq length
+  patience:       40                                      # patience for earlystopping
+  seq_length:     120                                     # input & output seq length
