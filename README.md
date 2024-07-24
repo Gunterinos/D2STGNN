@@ -1,10 +1,11 @@
-# Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic Forecasting
+# Thesis Project: Graph Neural Networks for Long-Term Traffic Forecasting
 
-Code for our VLDB'22 paper: "[Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic Forecasting](https://arxiv.org/abs/2206.09112)".
 
-<img src="figures/D2STGNN.png" alt="D2STGNN" style="zoom:42%;" />
+This project was completed as part of the Research Project course in the Computer Science and Engineering Bachelor's program at TU Delft.
 
-> We all depend on mobility, and vehicular transportation affects the daily lives of most of us. Thus, the ability to forecast the state of traffic in a road network is an important functionality and a challenging task. Traffic data is often obtained from sensors deployed in a road network. Recent proposals on spatial-temporal graph neural networks have achieved great progress at modeling complex spatial-temporal correlations in traffic data, by modeling traffic data as a diffusion process. However, intuitively, traffic data encompasses two different kinds of hidden time series signals, namely the diffusion signals and inherent signals. Unfortunately, nearly all previous works coarsely consider traffic signals entirely as the outcome of the diffusion, while neglecting the inherent signals, which impacts model performance negatively. To improve modeling performance, we propose a novel Decoupled Spatial-Temporal Framework (DSTF) that separates the diffusion and inherent traffic information in a data-driven manner, which encompasses a unique estimation gate and a residual decomposition mechanism. The separated signals can be handled subsequently by the diffusion and inherent modules separately. Further, we propose an instantiation of DSTF, Decoupled Dynamic Spatial-Temporal Graph Neural Network (D2STGNN), that captures spatial-temporal correlations and also features a dynamic graph learning module that targets the learning of the dynamic characteristics of traffic networks. Extensive experiments with four real-world traffic datasets demonstrate that the framework is capable of advancing the state-of-the-art.
+Paper Link: "[Graph Neural Networks for Long-Term Traffic Forecasting](https://repository.tudelft.nl/record/uuid:4512a2ff-f0a1-4aac-89f6-c46e1944e7e8)"
+
+The GNN model used is D2STGNN, which can be found here: https://github.com/zezhishao/d2stgnn?tab=readme-ov-file
 
 ## 1. Table of Contents
 
@@ -14,6 +15,9 @@ dataloader      ->  pytorch dataloader
 datasets        ->  raw data and processed data
 model           ->  model implementation and training pipeline
 output          ->  model checkpoint
+preprocessing   ->  custom dataset creation with the use of coordinates
+statistics      ->  dataset statistics, such as variation and standard deviation of data
+error plots     ->  error plotting per each timestep
 ```
 
 ## 2. Requirements
@@ -26,9 +30,11 @@ pip install -r requirements.txt
 
 ### 3.1 Download Data
 
-For convenience, we package these datasets used in our model in [Google Drive](https://drive.google.com/drive/folders/1H3nl0eRCVl5jszHPesIPoPu1ODhFMSub?usp=sharing) or [BaiduYun](https://pan.baidu.com/s/1iFcKJ8qeCthyEgPEXYJ-rA?pwd=8888).
+The original datasets used in the model can be found here: [Google Drive](https://drive.google.com/drive/folders/1H3nl0eRCVl5jszHPesIPoPu1ODhFMSub?usp=sharing).
 
-They should be downloaded to the code root dir and replace the `raw_data` and `sensor_graph` folder in the `datasets` folder by:
+The custom datasets used for the experiments can be found here: [Google Drive](https://drive.google.com/drive/folders/1oFc0otdV3REoJiUJPHhCLx6kLtnq1vQ3?usp=sharing)
+
+They should be downloaded to the code root dir and replace the `raw_data` and `sensor_graph` folder in the `datasets` folder by using this script or manually:
 
 ```bash
 cd /path/to/project
@@ -38,7 +44,7 @@ rm {sensor_graph.zip,raw_data.zip}
 mkdir log output
 ```
 
-Alterbatively, the datasets can be found as follows:
+Alterbatively, the datasets can be found here:
 
 - METR-LA and PEMS-BAY: These datasets were released by DCRNN[1]. Data can be found in its [GitHub repository](https://github.com/chnsh/DCRNN_PyTorch), where the sensor graphs are also provided.
 
@@ -46,11 +52,24 @@ Alterbatively, the datasets can be found as follows:
 
 ### 3.2 Data Process
 
+
+To create a custom dataset, you need to input the coordinates of the rectangle where you want the sensors to be located.
+These coordinates can be entered into `box_coordinates` in the `preprocessing_run.py` file.
+
+```bash
+cd ./preprocessing; python preprocessing_run.py
+```
+Afterward you need to move the newly created h5 file from the Datasets folder in preprocessing to the datasets folder in the main project. 
+Also, pair it with a compatible executable for generating training data.
+
+
+Then to generate the necessary training data the following command will be run.
+
 ```bash
 python datasets/raw_data/$DATASET_NAME/generate_training_data.py
 ```
 
-Replace `$DATASET_NAME` with one of `METR-LA`, `PEMS-BAY`, `PEMS04`, `PEMS08`.
+Replace `$DATASET_NAME` with one of `METR-LA`, `PEMS-BAY`, `PEMS04`, `PEMS08`, or the custom dataset name.
 
 The processed data is placed in `datasets/$DATASET_NAME`.
 
@@ -66,43 +85,40 @@ E.g., `python main.py --dataset=METR-LA`.
 
 Check the config files of the dataset in `configs/$DATASET_NAME`, and set the startup args to test mode.
 
-Download the pre-trained model files in [Google Drive](https://drive.google.com/drive/folders/18nkluGajYET2F9mxz3Kl6jcFVAAUGfpc?usp=sharing) or [BaiduYun](https://pan.baidu.com/s/1tGOdVy4uz5TcvAk5FrR4MQ?pwd=8888) into the `output` folder and run the command line in `4`.
+Download the pre-trained model files in for the original datasets [Google Drive](https://drive.google.com/drive/folders/18nkluGajYET2F9mxz3Kl6jcFVAAUGfpc?usp=sharing) into the `output` folder and run the command line in `4`.
 
-## 6 Results and Visualization
+## 6 Plotting and statistics
 
-<img src="figures/TheTable.png" alt="TheTable" style="zoom:80%;" />
+After each epoch a detailed log will be printed out. 
+In order to plot the errors over time, you need to input the outputted log into the data variable inside `error_plots.py`.
 
-<img src="figures/Visualization.png" alt="Visualization" style="zoom:100%;" />
-
-## 7. More Related Works
-
-- [STEP: Pre-training-Enhanced Spatial-Temporal Graph Neural Network For Multivariate Time Series Forecasting. SIGKDD 2022.](https://github.com/zezhishao/STEP)
-
-- [BasicTS: An Open Source Standard Time Series Forecasting Benchmark.](https://github.com/zezhishao/BasicTS)
-
-## 8. Citing
-
-If you find this repository useful for your work, please consider citing it as follows:
-
-```bibtex
-@article{DBLP:journals/pvldb/ShaoZWWXCJ22,
-  author    = {Zezhi Shao and
-               Zhao Zhang and
-               Wei Wei and
-               Fei Wang and
-               Yongjun Xu and
-               Xin Cao and
-               Christian S. Jensen},
-  title     = {Decoupled Dynamic Spatial-Temporal Graph Neural Network for Traffic
-               Forecasting},
-  journal   = {Proc. {VLDB} Endow.},
-  volume    = {15},
-  number    = {11},
-  pages     = {2733--2746},
-  year      = {2022}
-}
+```bash
+python error_plots.py
 ```
 
+To show dataset statistic you need to input the path of the h5 files of the datasets into the `file_paths` variable inside `dataset_statistics.py`.
+
+```bash
+python dataset_statistics.py
+```
+
+## 7 Results and Visualization
+
+**Errors converge** to a sort of **logarithmic growth** as the number of epochs is increased.
+
+![log_convergence.gif](..%2Ffinal_plots_latex%2Fgif_prezentare.gif)
+
+Logarithmic curves fitted to the errors.
+
+![logs_plotted.png](..%2Ffinal_plots_latex%2FFigure_1.png)
+
+**Prediction performance differs** from the **type of curve** a traffic jams creates. 
+The blue is the real data, orange is predicted. 
+Also, the data shown here is the traffic speed of vehicles passing through sensors.
+The sensor ids are 767350 and 717499, which can be found in the `LA_AND_BAY_traffic_sensors_map.html` highlited in yellow and red respectively.
+
+
+![Horizon 1 (10).png](..%2F..%2F..%2FDownloads%2FHorizon%201%20%2810%29.png)
 ## References
 
 [1] Atwood J, Towsley D. Diffusion-convolutional neural networks[J]. Advances in neural information processing systems, 2016, 29: 1993-2001.

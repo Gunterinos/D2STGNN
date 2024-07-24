@@ -8,11 +8,11 @@ from DataProcessor import DataProcessor
 from gen_adj_mx import get_adjacency_matrix
 
 # Coordinate definitions
-metrla_box_coordinates = [34.188469, -118.509482, -118.439572, 34.132489]
-metrla_box_coordinates_bigger = [34.243283, -118.594800, -118.253022, 34.127267]
+box_coordinates = [34.188469, -118.509482, -118.439572, 34.132489]
+box_coordinates_bigger = [34.243283, -118.594800, -118.253022, 34.127267]
 
 # Data options: [road_distance_small, sensor_ids_file, dataset_file, coordinates, dataset_name, coordinates_bigger, distances_filename]
-metrla = ["METR-LA", "metr_ids.txt", "metr-la", metrla_box_coordinates, "METR-LA", metrla_box_coordinates_bigger,
+metrla = ["METR-LA", "metr_ids.txt", "metr-la", box_coordinates, "METR-LA", box_coordinates_bigger,
           "distances_la_2012.csv"]
 
 sensor_locations_file = "graph_sensor_locations.csv"
