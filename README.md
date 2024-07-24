@@ -106,19 +106,19 @@ python dataset_statistics.py
 
 **Errors converge** to a sort of **logarithmic growth** as the number of epochs is increased.
 
-![log_convergence.gif](..%2Ffinal_plots_latex%2Fgif_prezentare.gif)
+![gif_prezentare.gif](figures%2Fgif_prezentare.gif)
 
 Logarithmic curves fitted to the errors.
 
-![logs_plotted.png](..%2Ffinal_plots_latex%2FFigure_1.png)
+![log_curves.png](figures%2Flog_curves.png)
 
 **Prediction performance differs** from the **type of curve** a traffic jams creates. 
 The blue is the real data, orange is predicted. 
 Also, the data shown here is the traffic speed of vehicles passing through sensors.
 The sensor ids are 767350 and 717499, which can be found in the `LA_AND_BAY_traffic_sensors_map.html` highlited in yellow and red respectively.
 
+![curve.png](figures%2Fcurve.png)
 
-![Horizon 1 (10).png](..%2F..%2F..%2FDownloads%2FHorizon%201%20%2810%29.png)
 ## References
 
 [1] Atwood J, Towsley D. Diffusion-convolutional neural networks[J]. Advances in neural information processing systems, 2016, 29: 1993-2001.
